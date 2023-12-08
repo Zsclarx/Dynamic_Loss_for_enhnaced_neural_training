@@ -53,7 +53,7 @@ def call(self, y_true, y_pred):
 dynamic_loss = standard_loss + learning_progress_loss +
 class_balance_loss +
 curriculum_loss![](Dynamic_Loss_function/xp1u4ewb.png)
-<img src="Dynamic_Loss_function/xp1u4ewb.png" width="1.0in" height="0.4666in" />
+<img src="Dynamic_Loss_function/xp1u4ewb.png" width="300" height="200" />
 
 > return dynamic_loss
 
@@ -104,10 +104,10 @@ tf.ones_like(class_distribution) / len(class_distribution))
 > distribution in y_true and a uniform distribution.
 
 ![](Dynamic_Loss_function/gced5xts.png)
-<img src="Dynamic_Loss_function/gced5xts.png" width="7.359in" height="3.881in" />
+<img src="Dynamic_Loss_function/gced5xts.png" width="700" height="400" />
 
 ![](Dynamic_Loss_function/4a4konez.png)
-<img src="Dynamic_Loss_function/4a4konez.png" width="7.359in" height="0.647in" />
+<img src="Dynamic_Loss_function/4a4konez.png" width="700" height="200" />
 
 **Curriculum** **Loss** **Function:**
 
@@ -125,7 +125,7 @@ term. It is based on the sine of y_pred values and is scaled by a
 curriculum factor obtained from the curriculum_schedule function.
 
 ![](Dynamic_Loss_function/m3nnnlyo.png)
-<img src="Dynamic_Loss_function/m3nnnlyo.png" width="7.333in" height="5.433in" />
+<img src="Dynamic_Loss_function/m3nnnlyo.png" width="700" height="500" />
 
 
 **Learning** **Progress** **Tracking:**
