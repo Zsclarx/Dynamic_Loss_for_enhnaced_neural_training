@@ -52,7 +52,7 @@ def call(self, y_true, y_pred):
 
 dynamic_loss = standard_loss + learning_progress_loss +
 class_balance_loss +
-curriculum_loss![](./xp1u4ewb.png){width="1.0in"
+curriculum_loss![](Dynamic_Loss_function/xp1u4ewb.png){width="1.0in"
 height="0.4666655730533683in"}
 
 > return dynamic_loss
@@ -103,8 +103,8 @@ tf.ones_like(class_distribution) / len(class_distribution))
 > calculating the cross-entropy loss between the average class
 > distribution in y_true and a uniform distribution.
 
-![](./gced5xts.png){width="7.35902668416448in"
-height="3.881943350831146in"}![](./4a4konez.png){width="7.35902668416448in"
+![](Dynamic_Loss_function/gced5xts.png){width="7.35902668416448in"
+height="3.881943350831146in"}![](Dynamic_Loss_function/4a4konez.png){width="7.35902668416448in"
 height="0.6479155730533683in"}
 
 **Curriculum** **Loss** **Function:**
@@ -122,7 +122,7 @@ def curriculum_loss(self, y_pred):
 term. It is based on the sine of y_pred values and is scaled by a
 curriculum factor obtained from the curriculum_schedule function.
 
-![](./m3nnnlyo.png){width="7.333333333333333in"
+![](Dynamic_Loss_function/m3nnnlyo.png){width="7.333333333333333in"
 height="5.433333333333334in"}
 
 **Learning** **Progress** **Tracking:**
