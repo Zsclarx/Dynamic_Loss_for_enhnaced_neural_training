@@ -6,7 +6,7 @@ Group No. – 63 (Prakhar Pratap Singh and Pratham Agarwal)
 
 **Google Colab link :-**  
 
-[https://colab.research.google.com/drive/1elILhdkU_eLoKOyvkO_beWpoh80MuidZ?usp=sharing ](https://colab.research.google.com/drive/1elILhdkU_eLoKOyvkO_beWpoh80MuidZ?usp=sharing)
+[https://colab.research.google.com/drive/1fNNzxhwEc4jdvBdQa-Xj_DnUs3ENxrKP?usp=sharing](https://colab.research.google.com/drive/1fNNzxhwEc4jdvBdQa-Xj_DnUs3ENxrKP?usp=sharing)
 
 The DynamicLoss function is designed to be a flexible and customizable loss function in TensorFlow/Keras. Let's break down each part of the DynamicLoss class: 
 
