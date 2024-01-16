@@ -10,77 +10,53 @@ Group No. – 63 (Prakhar Pratap Singh and Pratham Agarwal)
 
 The DynamicLoss function is designed to be a flexible and customizable loss function in TensorFlow/Keras. Let's break down each part of the DynamicLoss class: 
 
-**Initialization:** 
+### Dynamical Loss Function Implementation Documentation:
 
-def \_\_init\_\_(self, learning\_rate, curriculum\_schedule, \*\*kwargs):
+#### 1. **Load and Preprocess Data:**
+   - The code loads the MNIST dataset and preprocesses the images and labels.
 
-super(DynamicLoss, self).\_\_init\_\_(\*\*kwargs) self.learning\_rate = learning\_rate self.curriculum\_schedule = curriculum\_schedule
+#### 2. **Neural Network Architecture:**
+   - The neural network architecture is defined using Keras. It's a simple feedforward network.
 
-self.epoch = 0  # To keep track of the current epoch
+#### 3. **Dynamical Loss Function (Weighted Loss):**
+   - A custom dynamical loss function `weighted_loss` is defined. The weights for the loss function are determined by the function `c_fn`.
 
-- **learning\_rate**: This is a parameter that scales the contribution of the learning progress component in the loss function. 
-- **curriculum\_schedule**: This is a function that takes the current epoch as an argument and returns a curriculum factor. The curriculum factor is used to scale the contribution of the curriculum loss component. 
-- **epoch**: This variable is used to keep track of the current epoch during training. 
+     **Formulas:**
+     - The dynamical weight function \( c_{\text{fn}}(t, i, w_{\text{max}}) \) is defined as follows:
+       \[ w(t, i) = 1 + t \cdot \text{slope} \ \ \text{for} \ t < \frac{T}{2} \]
+       \[ w(t, i) = 2 \cdot w_{\text{max}} - t \cdot \text{slope} - 1 \ \ \text{for} \ t \geq \frac{T}{2} \]
+       \[ \text{slope} = \frac{2 \cdot (w_{\text{max}} - 1)}{T} \]
+       \[ w = \frac{1}{C} \cdot \text{normalize}\left(\mathbb{1} + (w_{\text{main\_class}} - 1) \cdot \text{one\_hot}(i, C)\right) \]
+       Where:
+       - \( C \) is the number of classes.
+       - \( \mathbb{1} \) is a vector of ones.
+       - \( \text{one\_hot}(i, C) \) is a one-hot encoded vector for class \( i \).
+       - \( w_{\text{main\_class}} \) is the main class weight.
+       - The final weight vector \( w \) is normalized to ensure that its elements sum to \( C \).
 
-**Loss Calculation**: 
+#### 4. **Standard Loss Function:**
+   - A standard cross-entropy loss function is defined for comparison during training.
 
-def call(self, y\_true, y\_pred):
+     **Formula:**
+     \[ \text{Standard Cross-Entropy Loss} = -\frac{1}{C} \sum_{j=1}^{C} y_j \cdot \log(\text{softmax}(\text{predictions})) \]
+     Where:
+     - \( C \) is the number of classes.
+     - \( y_j \) is the one-hot encoded ground truth label for class \( j \).
+     - \( \text{softmax}(\text{predictions}) \) is the softmax activation of the neural network predictions.
 
-- Custom loss components (modify as needed)
+#### 5. **Accuracy Calculation:**
+   - A function to calculate accuracy is defined.
 
-standard\_loss = tf.keras.losses.categorical\_crossentropy(y\_true, y\_pred) learning\_progress\_loss = self.learning\_rate \* self.learning\_progress() class\_balance\_loss = self.class\_balance\_loss(y\_true)
+     **Formula:**
+     \[ \text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \text{I}(\text{true\_label}_i = \text{predicted\_label}_i) \]
+     Where:
+     - \( N \) is the number of samples.
+     - \( \text{I}(condition) \) is the indicator function.
 
-curriculum\_loss = self.curriculum\_loss(y\_pred)
+#### 6. **Training Loop:**
+   - The training loop uses the custom loss function and updates the model's weights accordingly.
 
-dynamic\_loss = standard\_loss + learning\_progress\_loss + class\_balance\_loss + curriculum\_loss
+     **Formulas:**
+     - The training loop iterates over time steps and updates the weights dynamically based on the current time \( t \) and class index \( c \).
 
-return dynamic\_loss
-
-* **standard\_loss**: This is the standard categorical cross-entropy loss between the true labels (y\_true) and the predicted labels (y\_pred). 
-* **learning\_progress\_loss**: This component represents a custom loss term that increases linearly with epochs. It is scaled by the specified learning rate (self.learning\_rate). 
-* **class\_balance\_loss**: This component penalizes class imbalance. It calculates the cross-entropy loss between the average class distribution in y\_true and a uniform distribution. 
-* **curriculum\_loss**: This component represents a curriculum-based loss term. It is based on the sine of y\_pred values and is scaled by a curriculum factor obtained from the curriculum\_schedule function. 
-
-  **The final dynamic\_loss is the sum of these individual components**. 
-
-**Learning Progress and Class Balance Loss Functions:** def learning\_progress(self):
-
-- Example: Learning progress increases linearly with epochs return self.epoch / num\_epochs  # Adjust as needed
-
-def class\_balance\_loss(self, y\_true):
-
-- Example: Penalize class imbalance class\_distribution = tf.reduce\_mean(y\_true, axis=0)
-
-return tf.keras.losses.categorical\_crossentropy(class\_distribution, tf.ones\_like(class\_distribution) / len(class\_distribution))
-
-- **learning\_progress**: This function defines the learning progress, which increases linearly with epochs. It is used in the calculation of the learning progress loss. 
-
-![](Aspose.Words.0ee622f2-2fd3-441e-85bb-475525c84908.001.png)
-
-- **class\_balance\_loss**: This function penalizes class imbalance by calculating the cross-entropy loss between the average class distribution in y\_true and a uniform distribution. 
-
-![](Aspose.Words.0ee622f2-2fd3-441e-85bb-475525c84908.002.jpeg)
-
-![](Aspose.Words.0ee622f2-2fd3-441e-85bb-475525c84908.003.png)
-
-**Curriculum Loss Function:** 
-
-def curriculum\_loss(self, y\_pred):
-
-- Example: Curriculum loss based on the sine of y\_pred values curriculum\_factor = self.curriculum\_schedule(self.epoch)
-
-  return curriculum\_factor \* 0.1 \* tf.reduce\_sum(tf.abs(tf.math.sin(y\_pred)))
-
-**curriculum\_loss** : This function calculates a curriculum-based loss term. It is based on the sine of y\_pred values and is scaled by a curriculum factor obtained from the curriculum\_schedule function. 
-
-![](Aspose.Words.0ee622f2-2fd3-441e-85bb-475525c84908.004.jpeg)
-
-**Learning Progress Tracking:** 
-
-def on\_epoch\_end(self, epoch, logs=None):
-
-self.epoch = epoch
-
-- on\_epoch\_end: This method updates the self.epoch variable at the end of each epoch, ensuring that the learning progress and curriculum loss functions get the correct epoch information. 
-
-In summary, the DynamicLoss function is a versatile custom loss function that allows you to incorporate various components into your neural network training process. It includes standard cross-entropy loss, learning progress loss, class balance loss, and curriculum loss, each of which can be adjusted and customized based on your specific requirements. The learning progress and epoch tracking ensure that the dynamic components evolve over the course of training. 
+This documentation provides a detailed overview of the code, including formulas for the dynamical loss function, standard loss function, accuracy calculation, and explanations of key components.
